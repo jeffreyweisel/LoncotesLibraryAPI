@@ -69,6 +69,12 @@ namespace LoncotesLibrary.Migrations
                 {
                     table.PrimaryKey("PK_Materials", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Materials_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Materials_MaterialTypes_MaterialTypeId",
                         column: x => x.MaterialTypeId,
                         principalTable: "MaterialTypes",
@@ -85,7 +91,7 @@ namespace LoncotesLibrary.Migrations
                     MaterialId = table.Column<int>(type: "integer", nullable: false),
                     PatronId = table.Column<int>(type: "integer", nullable: false),
                     CheckoutDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    ReturnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -140,16 +146,16 @@ namespace LoncotesLibrary.Migrations
                 columns: new[] { "Id", "GenreId", "MaterialName", "MaterialTypeId", "OutOfCirculationSince" },
                 values: new object[,]
                 {
-                    { 1, 2, "Oliver Twist", 1, new DateTime(2023, 12, 24, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2030) },
+                    { 1, 2, "Oliver Twist", 1, new DateTime(2023, 12, 25, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2390) },
                     { 2, 3, "The Great Gatsby", 1, null },
                     { 3, 1, "1984", 1, null },
                     { 4, 5, "The Lord Of The Rings", 1, null },
-                    { 5, 4, "Harry Potter and the Sorcerers Stone", 1, new DateTime(2023, 12, 2, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2060) },
-                    { 6, 2, "Abbey Road", 2, new DateTime(2023, 12, 24, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070) },
+                    { 5, 4, "Harry Potter and the Sorcerers Stone", 1, new DateTime(2023, 12, 3, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420) },
+                    { 6, 2, "Abbey Road", 2, new DateTime(2023, 12, 25, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420) },
                     { 7, 2, "The Dark Side of the Moon", 2, null },
-                    { 8, 1, "The Shawshank Redemption", 3, new DateTime(2023, 12, 19, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070) },
-                    { 9, 3, "Inception", 3, new DateTime(2023, 12, 14, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070) },
-                    { 10, 5, "The Dark Knight", 3, new DateTime(2023, 12, 9, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070) }
+                    { 8, 1, "The Shawshank Redemption", 3, new DateTime(2023, 12, 20, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420) },
+                    { 9, 3, "Inception", 3, new DateTime(2023, 12, 15, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420) },
+                    { 10, 5, "The Dark Knight", 3, new DateTime(2023, 12, 10, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -163,6 +169,11 @@ namespace LoncotesLibrary.Migrations
                 column: "PatronId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Materials_GenreId",
+                table: "Materials",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Materials_MaterialTypeId",
                 table: "Materials",
                 column: "MaterialTypeId");
@@ -174,13 +185,13 @@ namespace LoncotesLibrary.Migrations
                 name: "Checkouts");
 
             migrationBuilder.DropTable(
-                name: "Genres");
-
-            migrationBuilder.DropTable(
                 name: "Materials");
 
             migrationBuilder.DropTable(
                 name: "Patrons");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "MaterialTypes");

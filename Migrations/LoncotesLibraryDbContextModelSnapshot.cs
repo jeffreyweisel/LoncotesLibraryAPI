@@ -39,7 +39,7 @@ namespace LoncotesLibrary.Migrations
                     b.Property<int>("PatronId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ReturnDate")
+                    b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
@@ -118,6 +118,8 @@ namespace LoncotesLibrary.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
                     b.HasIndex("MaterialTypeId");
 
                     b.ToTable("Materials");
@@ -129,7 +131,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 2,
                             MaterialName = "Oliver Twist",
                             MaterialTypeId = 1,
-                            OutOfCirculationSince = new DateTime(2023, 12, 24, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2030)
+                            OutOfCirculationSince = new DateTime(2023, 12, 25, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2390)
                         },
                         new
                         {
@@ -158,7 +160,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 4,
                             MaterialName = "Harry Potter and the Sorcerers Stone",
                             MaterialTypeId = 1,
-                            OutOfCirculationSince = new DateTime(2023, 12, 2, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2060)
+                            OutOfCirculationSince = new DateTime(2023, 12, 3, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420)
                         },
                         new
                         {
@@ -166,7 +168,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 2,
                             MaterialName = "Abbey Road",
                             MaterialTypeId = 2,
-                            OutOfCirculationSince = new DateTime(2023, 12, 24, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070)
+                            OutOfCirculationSince = new DateTime(2023, 12, 25, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420)
                         },
                         new
                         {
@@ -181,7 +183,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 1,
                             MaterialName = "The Shawshank Redemption",
                             MaterialTypeId = 3,
-                            OutOfCirculationSince = new DateTime(2023, 12, 19, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070)
+                            OutOfCirculationSince = new DateTime(2023, 12, 20, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420)
                         },
                         new
                         {
@@ -189,7 +191,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 3,
                             MaterialName = "Inception",
                             MaterialTypeId = 3,
-                            OutOfCirculationSince = new DateTime(2023, 12, 14, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070)
+                            OutOfCirculationSince = new DateTime(2023, 12, 15, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420)
                         },
                         new
                         {
@@ -197,7 +199,7 @@ namespace LoncotesLibrary.Migrations
                             GenreId = 5,
                             MaterialName = "The Dark Knight",
                             MaterialTypeId = 3,
-                            OutOfCirculationSince = new DateTime(2023, 12, 9, 11, 11, 35, 573, DateTimeKind.Local).AddTicks(2070)
+                            OutOfCirculationSince = new DateTime(2023, 12, 10, 14, 13, 0, 122, DateTimeKind.Local).AddTicks(2420)
                         });
                 });
 
@@ -296,13 +298,13 @@ namespace LoncotesLibrary.Migrations
             modelBuilder.Entity("Library.Models.Checkout", b =>
                 {
                     b.HasOne("Library.Models.Material", "Material")
-                        .WithMany()
+                        .WithMany("Checkouts")
                         .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Library.Models.Patron", "Patron")
-                        .WithMany()
+                        .WithMany("Checkouts")
                         .HasForeignKey("PatronId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -314,13 +316,31 @@ namespace LoncotesLibrary.Migrations
 
             modelBuilder.Entity("Library.Models.Material", b =>
                 {
+                    b.HasOne("Library.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Models.MaterialType", "MaterialType")
                         .WithMany()
                         .HasForeignKey("MaterialTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Genre");
+
                     b.Navigation("MaterialType");
+                });
+
+            modelBuilder.Entity("Library.Models.Material", b =>
+                {
+                    b.Navigation("Checkouts");
+                });
+
+            modelBuilder.Entity("Library.Models.Patron", b =>
+                {
+                    b.Navigation("Checkouts");
                 });
 #pragma warning restore 612, 618
         }
