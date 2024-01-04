@@ -244,13 +244,21 @@ app.MapPut("/patrons/deactivate/{id}", (LoncotesLibraryDbContext db, int id, Pat
 });
 
 // Checkout a material
-app.MapPost("/checkouts", (LoncotesLibraryDbContext db, Checkout newCheckout) =>
+app.MapPost("/checkouts", (LoncotesLibraryDbContext db, CheckoutDTO checkoutDTO) =>
 {
     try
     {
-        newCheckout.CheckoutDate = DateTime.Now; // set CheckoutDate to DateTime.Now
+        var newCheckout = new Checkout
+        {
+            MaterialId = checkoutDTO.MaterialId,
+            PatronId = checkoutDTO.PatronId,
+            CheckoutDate = DateTime.Now,
+            ReturnDate = checkoutDTO.ReturnDate
+        };
+
         db.Checkouts.Add(newCheckout);
         db.SaveChanges();
+
         return Results.Created($"/checkouts/{newCheckout.Id}", newCheckout);
     }
     catch (DbUpdateException)
@@ -259,20 +267,20 @@ app.MapPost("/checkouts", (LoncotesLibraryDbContext db, Checkout newCheckout) =>
     }
 });
 
+
 // Return a material
-app.MapPost("/checkouts/return", (LoncotesLibraryDbContext db, Checkout returnCheckout) =>
+app.MapPut("/checkouts/{id}", (LoncotesLibraryDbContext db, int id, Checkout checkout) =>
 {
-    try
+    Checkout checkoutToUpdate = db.Checkouts.SingleOrDefault(checkout => checkout.Id == id);
+    if (checkoutToUpdate == null)
     {
-        returnCheckout.ReturnDate = DateTime.Now; // set CheckoutDate to DateTime.Now
-        db.Checkouts.Add(returnCheckout);
-        db.SaveChanges();
-        return Results.Created($"/checkouts/return/{returnCheckout.Id}", returnCheckout);
+        return Results.NotFound();
     }
-    catch (DbUpdateException)
-    {
-        return Results.BadRequest("Invalid data submitted");
-    }
+    
+    checkoutToUpdate.ReturnDate = DateTime.Now;
+
+    db.SaveChanges();
+    return Results.NoContent();
 });
 
 app.Run();

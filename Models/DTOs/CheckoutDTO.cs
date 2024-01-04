@@ -11,7 +11,6 @@ public class CheckoutDTO
     [Required]
     public int PatronId { get; set; }
     public PatronDTO Patron { get; set; }
-    [Required]
     public DateTime? CheckoutDate { get; set; }
     public DateTime? ReturnDate { get; set; }
 }
