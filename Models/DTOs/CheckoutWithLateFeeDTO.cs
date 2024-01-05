@@ -27,5 +27,6 @@ public class CheckoutWithLateFeeDTO
             return daysLate > 0 ? fee : null;
         }
     }
+    public bool Paid { get; set; }
 
 }

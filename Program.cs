@@ -188,7 +188,7 @@ app.MapGet("patrons/{id}", (LoncotesLibraryDbContext db, int id) =>
             Email = p.Email,
             Address = p.Address,
             IsActive = p.IsActive,
-            Checkouts = p.Checkouts.Select(c => new CheckoutDTO
+            Checkouts = p.Checkouts.Select(c => new CheckoutWithLateFeeDTO
             {
                 Id = c.Id,
                 MaterialId = c.MaterialId,
