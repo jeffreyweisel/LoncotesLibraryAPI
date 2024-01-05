@@ -30,7 +30,7 @@ app.UseHttpsRedirection();
 //TO-DO: Probaly will need /api for endponts once start on the client 
 
 // Get all materials (excluding materials that have an OutOfCirculationSince value)
-app.MapGet("/materials", (LoncotesLibraryDbContext db) =>
+app.MapGet("/api/materials", (LoncotesLibraryDbContext db) =>
 {
     return db.Materials
         .Where(m => m.OutOfCirculationSince == null)
@@ -57,7 +57,7 @@ app.MapGet("/materials", (LoncotesLibraryDbContext db) =>
 });
 
 // Get material by Id
-app.MapGet("materials/{id}", (LoncotesLibraryDbContext db, int id) =>
+app.MapGet("/api/materials/{id}", (LoncotesLibraryDbContext db, int id) =>
 {
     return db.Materials
         .Include(m => m.MaterialType)
@@ -103,7 +103,7 @@ app.MapGet("materials/{id}", (LoncotesLibraryDbContext db, int id) =>
 });
 
 // Post a new material
-app.MapPost("/materials", (LoncotesLibraryDbContext db, Material newMaterial) =>
+app.MapPost("/api/materials", (LoncotesLibraryDbContext db, Material newMaterial) =>
 {
     try
     {
@@ -118,7 +118,7 @@ app.MapPost("/materials", (LoncotesLibraryDbContext db, Material newMaterial) =>
 });
 
 // Remove material from circulation by setting OutOfCirculationSince property to DateTime.Now
-app.MapPut("/materials/{id}", (LoncotesLibraryDbContext db, int id, Material material) =>
+app.MapPut("/api/materials/{id}", (LoncotesLibraryDbContext db, int id, Material material) =>
 {
     Material materialToUpdate = db.Materials.SingleOrDefault(material => material.Id == id);
     if (materialToUpdate == null)
@@ -135,7 +135,7 @@ app.MapPut("/materials/{id}", (LoncotesLibraryDbContext db, int id, Material mat
 });
 
 // Get MaterialTypes
-app.MapGet("/materialtypes", (LoncotesLibraryDbContext db) =>
+app.MapGet("/api/materialtypes", (LoncotesLibraryDbContext db) =>
 {
     return db.MaterialTypes
         .Select(mt => new MaterialTypeDTO
@@ -148,7 +148,7 @@ app.MapGet("/materialtypes", (LoncotesLibraryDbContext db) =>
 });
 
 // Get genres
-app.MapGet("/genres", (LoncotesLibraryDbContext db) =>
+app.MapGet("/api/genres", (LoncotesLibraryDbContext db) =>
 {
     return db.Genres
         .Select(g => new GenreDTO
@@ -159,7 +159,7 @@ app.MapGet("/genres", (LoncotesLibraryDbContext db) =>
 });
 
 // Get patrons
-app.MapGet("/patrons", (LoncotesLibraryDbContext db) => 
+app.MapGet("/api/patrons", (LoncotesLibraryDbContext db) => 
 {
     return db.Patrons
         .Select(p => new PatronDTO
@@ -174,7 +174,7 @@ app.MapGet("/patrons", (LoncotesLibraryDbContext db) =>
 });
 
 // Get patron by Id with their associated checkouts
-app.MapGet("patrons/{id}", (LoncotesLibraryDbContext db, int id) =>
+app.MapGet("api/patrons/{id}", (LoncotesLibraryDbContext db, int id) =>
 {
     return db.Patrons
         .Include(p => p.Checkouts)
@@ -214,7 +214,7 @@ app.MapGet("patrons/{id}", (LoncotesLibraryDbContext db, int id) =>
 });
 
 // Update patron details
-app.MapPut("/patrons/{id}", (LoncotesLibraryDbContext db, int id, Patron patron) =>
+app.MapPut("/api/patrons/{id}", (LoncotesLibraryDbContext db, int id, Patron patron) =>
 {
     Patron patronToUpdate = db.Patrons.SingleOrDefault(patron => patron.Id == id);
     if (patronToUpdate == null)
@@ -230,7 +230,7 @@ app.MapPut("/patrons/{id}", (LoncotesLibraryDbContext db, int id, Patron patron)
 });
 
 // Deactivate a patron
-app.MapPut("/patrons/deactivate/{id}", (LoncotesLibraryDbContext db, int id, Patron patron) =>
+app.MapPut("/api/patrons/deactivate/{id}", (LoncotesLibraryDbContext db, int id, Patron patron) =>
 {
     Patron patronToUpdate = db.Patrons.SingleOrDefault(patron => patron.Id == id);
     if (patronToUpdate == null)
@@ -263,7 +263,7 @@ app.MapPost("/checkouts", (LoncotesLibraryDbContext db, Checkout newCheckout) =>
 });
 
 // Return a material
-app.MapPut("/checkouts/{id}", (LoncotesLibraryDbContext db, int id, Checkout checkout) =>
+app.MapPut("/api/checkouts/{id}", (LoncotesLibraryDbContext db, int id, Checkout checkout) =>
 {
     Checkout checkoutToUpdate = db.Checkouts.SingleOrDefault(checkout => checkout.Id == id);
     if (checkoutToUpdate == null)
@@ -278,7 +278,7 @@ app.MapPut("/checkouts/{id}", (LoncotesLibraryDbContext db, int id, Checkout che
 });
 
 // Delete a checkout
-app.MapDelete("/checkouts/{id}", (LoncotesLibraryDbContext db, int id) =>
+app.MapDelete("/api/checkouts/{id}", (LoncotesLibraryDbContext db, int id) =>
 {
     Checkout checkout = db.Checkouts.SingleOrDefault(c => c.Id == id);
     if (checkout == null)
@@ -292,7 +292,7 @@ app.MapDelete("/checkouts/{id}", (LoncotesLibraryDbContext db, int id) =>
 });
 
 // Get only available materials
-app.MapGet("/materials/available", (LoncotesLibraryDbContext db) =>
+app.MapGet("/api/materials/available", (LoncotesLibraryDbContext db) =>
 {
     return db.Materials
     .Where(m => m.OutOfCirculationSince == null)
@@ -309,7 +309,7 @@ app.MapGet("/materials/available", (LoncotesLibraryDbContext db) =>
 });
 
 // Get overdue checkouts
-app.MapGet("/checkouts/overdue", (LoncotesLibraryDbContext db) =>
+app.MapGet("/api/checkouts/overdue", (LoncotesLibraryDbContext db) =>
 {
     return db.Checkouts
     .Include(p => p.Patron)
