@@ -16,5 +16,6 @@ public class PatronDTO
     [Required]
     public bool IsActive { get; set; }
     public List<CheckoutDTO> Checkouts { get; set; }
+    
 
 }

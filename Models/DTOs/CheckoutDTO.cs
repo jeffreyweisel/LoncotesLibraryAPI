@@ -15,4 +15,6 @@ public class CheckoutDTO
     public DateTime? CheckoutDate { get; set; }
 
     public DateTime? ReturnDate { get; set; }
+    public bool Paid { get; set;}
+    
 }

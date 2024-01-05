@@ -319,7 +319,7 @@ app.MapGet("/checkouts/overdue", (LoncotesLibraryDbContext db) =>
         (DateTime.Today - co.CheckoutDate.Value).Days >
         co.Material.MaterialType.CheckoutDays &&
         co.ReturnDate == null)
-        .Select(co => new CheckoutDTO
+        .Select(co => new CheckoutWithLateFeeDTO
         {
             Id = co.Id,
             MaterialId = co.MaterialId,
