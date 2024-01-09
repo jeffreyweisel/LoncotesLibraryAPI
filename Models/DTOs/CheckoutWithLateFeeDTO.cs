@@ -16,17 +16,30 @@ public class CheckoutWithLateFeeDTO
 
     public DateTime? ReturnDate { get; set; }
     private static decimal _lateFeePerDay = 0.50M;
-    public decimal? LateFee
+   public decimal? LateFee
+{
+    get
     {
-        get
+        if (CheckoutDate == null || Material == null || Material.MaterialType == null)
         {
-            DateTime dueDate = CheckoutDate.Value.AddDays(Material.MaterialType.CheckoutDays);
-            DateTime returnDate = ReturnDate ?? DateTime.Today;
-            int daysLate = (returnDate - dueDate).Days;
+            return null; // Return null if necessary data is not available
+        }
+
+        DateTime dueDate = CheckoutDate.Value.AddDays(Material.MaterialType.CheckoutDays);
+        DateTime returnDate = ReturnDate ?? DateTime.Today;
+        int daysLate = (returnDate - dueDate).Days;
+
+        if (daysLate > 0)
+        {
             decimal fee = daysLate * _lateFeePerDay;
-            return daysLate > 0 ? fee : null;
+            return fee;
+        }
+        else
+        {
+            return null;
         }
     }
+}
     public bool Paid { get; set; }
 
 }

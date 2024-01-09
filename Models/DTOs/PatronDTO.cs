@@ -16,14 +16,13 @@ public class PatronDTO
     [Required]
     public bool IsActive { get; set; }
     public List<CheckoutWithLateFeeDTO> Checkouts { get; set; }
-    public decimal? Balance
+  public decimal? Balance
+{
+    get
     {
-        get
-        {
-            decimal totalFees = Checkouts.Sum(checkout => checkout.LateFee ?? 0);
-            return totalFees;
-        }
-
+        decimal? totalFees = Checkouts?.Sum(checkout => checkout.LateFee ?? null);
+        return totalFees;
     }
+}
 
 }
